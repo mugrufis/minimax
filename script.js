@@ -1,3 +1,16 @@
+document.getElementById("start").onclick = game;
+
+document.getElementById("remove1").onclick = removeOne;
+document.getElementById("remove2").onclick = removeTwo;
+document.getElementById("removek").onclick = removeK;
+
+
+const checkbox = document.getElementById("checkbox");
+const kValueInput = document.getElementById("kValueInput");
+const cubesNumberInput = document.getElementById("cubesNumberInput");
+
+let textDisplay = document.getElementById("textDisplay");
+
 const initialState = {
 	cubes: 8,
 	moves: 0
@@ -160,15 +173,17 @@ function getUserMove() {
 
 function game() {
 	while(currentState.cubes > 0) {
-		console.log(currentState);
+		print(currentState);
 		playMove(toMove(currentState).getNextMove(currentState));
 	}
 
 	if (toMove(currentState).name === "human") {
-		console.log("Sorry " + toMove(currentState).name + " you have lost..")
+		print("Sorry " + toMove(currentState).name + " you have lost..")
 	} else {
-		console.log("Gongratulations! You have won!!!")
+		print("Gongratulations! You have won!!!")
 	}
 }
 
-game();
+function print(text) {
+	textDisplay.innerHTML += "\n" + text;
+}

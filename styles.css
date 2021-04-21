@@ -1,0 +1,30 @@
+body {
+    width: 100%;
+    margin: auto;
+}
+
+#block1{
+
+    text-align:center;
+}
+
+#block2{
+    text-align: center;
+}
+
+#block3{
+    display: block;
+    text-align: center;
+    width: 250px;
+    height: 200px;
+    overflow: auto;
+    margin: auto;
+}
+
+#block4{
+    display: block;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+}
