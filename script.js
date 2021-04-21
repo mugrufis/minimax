@@ -1,16 +1,24 @@
 document.getElementById("start").onclick = startGame;
 
 document.getElementById("remove1").addEventListener('click', function(){
-	game2(removeOne);
+	playRoundWithPlayerMove(removeOne);
 });
 
 document.getElementById("remove2").addEventListener('click', function(){
-	game2(removeTwo);
+	playRoundWithPlayerMove(removeTwo);
 });
 
 document.getElementById("removek").addEventListener('click', function(){
-	game2(removeK);
+	playRoundWithPlayerMove(removeK);
 });
+
+function playRoundWithPlayerMove(playerMove) {
+	if (isTerminal(currentState)) {
+		printVictoryText();
+		return;
+	}
+	playRound(playerMove);
+}
 
 const checkbox = document.getElementById("checkbox");
 const kValueInput = document.getElementById("kValueInput");
@@ -31,7 +39,7 @@ const COMPUTER = {
 };
 const HUMAN = {
 	name: 'human',
-	getNextMove: getUserMove
+	getNextMove: () => {}
 };
 
 let order;
@@ -153,40 +161,10 @@ function playMove(action) {
 	currentState = result(currentState, action);
 }
 
-function getUserMove() {
-	let move;
-
-	while(!move) {
-		move = prompt("Please make your move.", "Valid moves are 1, 2, k");
-		if (!move || (['1','2','k'].indexOf(move) === -1)) {
-    			move = false;
-    			continue;
-	  }
-
-	  switch(move) {
-	  	case '1': 
-	  		return removeOne;
-	  	case '2': 
-	  		return removeTwo;
-	  	case 'k': 
-	  		return removeK;
-	  }
-	}
-}
-
-function game2(playerMove) {
-	if (!playerMove) {
-		return;
-	}
-
-	if (isTerminal(currentState)) {
-		printVictoryText();
-		return;
-	}
-
+function playRound(playerMove) {
+	// Logic is computer should always play after player
 	if (toMove(currentState).name === "human") {
-		playMove(playerMove);
-		print("After player move " + currentState.cubes + " remain");
+		makePlayerMove(playerMove);
 	}
 
 	if (isTerminal(currentState)) {
@@ -195,17 +173,26 @@ function game2(playerMove) {
 	}
 
 	if (toMove(currentState).name === "computer") {
-		playMove(toMove(currentState).getNextMove(currentState));
-		print("After computer move " + currentState.cubes + " remain");
+		makeComputerMove();
 	}
 
 	if (isTerminal(currentState)) {
 		printVictoryText();
 		return;
 	}
-
-
 }
+
+function makePlayerMove(playerMove) {
+		playMove(playerMove);
+		print("After player move " + currentState.cubes + " remain");
+}
+
+function makeComputerMove(playerMove) {
+	playMove(toMove(currentState).getNextMove(currentState));
+	print("After computer move " + currentState.cubes + " remain");
+}
+
+
 
 function printVictoryText() {
 	if (!isTerminal(currentState)) {
@@ -239,8 +226,17 @@ function startGame() {
 	currentState = initialState;
 	textDisplay.innerHTML = "";
 
-	print("Starting the game with " + currentState.cubes);
-	game2();
+	if (isTerminal(currentState)) {
+		print("Can not start the game with no cubes.")
+		return;
+	} else {
+		print("Starting the game with " + currentState.cubes);
+	}
+
+
+	if (toMove(currentState).name === "computer") {
+		playRound();
+	}
 }
 
 function print(text) {
