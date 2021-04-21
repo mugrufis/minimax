@@ -1,9 +1,16 @@
-document.getElementById("start").onclick = game;
+document.getElementById("start").onclick = startGame;
 
-document.getElementById("remove1").onclick = removeOne;
-document.getElementById("remove2").onclick = removeTwo;
-document.getElementById("removek").onclick = removeK;
+document.getElementById("remove1").addEventListener('click', function(){
+	game2(removeOne);
+});
 
+document.getElementById("remove2").addEventListener('click', function(){
+	game2(removeTwo);
+});
+
+document.getElementById("removek").addEventListener('click', function(){
+	game2(removeK);
+});
 
 const checkbox = document.getElementById("checkbox");
 const kValueInput = document.getElementById("kValueInput");
@@ -16,7 +23,7 @@ const initialState = {
 	moves: 0
 };
 
-const K = 3;
+let K = 3;
 
 const COMPUTER = {
 	name: 'computer',
@@ -27,10 +34,7 @@ const HUMAN = {
 	getNextMove: getUserMove
 };
 
-const order = {
-	first: COMPUTER,
-	second: HUMAN
-}
+let order;
 
 let currentState = initialState;
 
@@ -168,22 +172,77 @@ function getUserMove() {
 	  		return removeK;
 	  }
 	}
-  
 }
 
-function game() {
-	while(currentState.cubes > 0) {
-		print(currentState);
+function game2(playerMove) {
+	if (!playerMove) {
+		return;
+	}
+
+	if (isTerminal(currentState)) {
+		printVictoryText();
+		return;
+	}
+
+	if (toMove(currentState).name === "human") {
+		playMove(playerMove);
+		print("After player move " + currentState.cubes + " remain");
+	}
+
+	if (isTerminal(currentState)) {
+		printVictoryText();
+		return;
+	}
+
+	if (toMove(currentState).name === "computer") {
 		playMove(toMove(currentState).getNextMove(currentState));
+		print("After computer move " + currentState.cubes + " remain");
+	}
+
+	if (isTerminal(currentState)) {
+		printVictoryText();
+		return;
+	}
+
+
+}
+
+function printVictoryText() {
+	if (!isTerminal(currentState)) {
+		throw new Error("Can't print victory text when the game is not yet over");
 	}
 
 	if (toMove(currentState).name === "human") {
 		print("Sorry " + toMove(currentState).name + " you have lost..")
 	} else {
-		print("Gongratulations! You have won!!!")
+		print("Congratulations! You have won!!!")
 	}
 }
 
+function startGame() {
+	if (checkbox.checked) {
+		order = {
+			first: HUMAN,
+			second: COMPUTER
+		}
+	} else {
+		order = {
+			first: COMPUTER,
+			second: HUMAN
+		}
+	}
+
+	K = kValueInput.value;
+	document.getElementById("removek").innerText  = "remove " + K;
+
+	initialState.cubes= cubesNumberInput.value;
+	currentState = initialState;
+	textDisplay.innerHTML = "";
+
+	print("Starting the game with " + currentState.cubes);
+	game2();
+}
+
 function print(text) {
-	textDisplay.innerHTML += "\n" + text;
+	textDisplay.innerHTML += "<br>" + text;
 }
