@@ -16,7 +16,7 @@ body {
     display: block;
     text-align: center;
     width: 250px;
-    height: 200px;
+    height: 70vh;
     overflow: auto;
     margin: auto;
 }

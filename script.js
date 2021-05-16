@@ -27,7 +27,7 @@ const cubesNumberInput = document.getElementById("cubesNumberInput");
 let textDisplay = document.getElementById("textDisplay");
 
 const initialState = {
-	cubes: 8,
+	cubes: 0,
 	moves: 0
 };
 
@@ -228,6 +228,10 @@ function startGame() {
 
 	if (isTerminal(currentState)) {
 		print("Can not start the game with no cubes.")
+		return;
+	} else if (parseInt(currentState.cubes) <= parseInt(K) || parseInt(K) <= 2) {
+		alert("K should be 2 < K < No. Of cubes");
+		location.reload(true);
 		return;
 	} else {
 		print("Starting the game with " + currentState.cubes);
